@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2"></script> -->
+  </head>
+
+  <body>
+
+    <div id="app">
+
+      <h2>Перебор массива</h2>
+      <ul>
+        <li v-for="(value, index) in list" :key="index">{{value}}
+          <br>
+          <button v-on:click="deleteNote(index)">Удалить</button>
+        </li>
+      </ul>
+
+      <input type="text" v-model="inputValue" v-on:keypress.enter="addNewNotes">
+
+
+
+
+    </div>
+
+    <script src="ob.js"></script>
+  </body>
+
+</html>
