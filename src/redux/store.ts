@@ -1,6 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 
+import mySlice from './slices/mySlice';
+
 import cart from './slices/cartSlice';
 import filter from './slices/filterSlice';
 import pizza from './slices/pizzasSlice';
@@ -17,6 +19,7 @@ export const store = configureStore({
         cart: cart,
         filter,
         pizza,
+        mySlice,
     },
     // мидлваре - логика которая выполняется в момент запуска экшена до их выполнения
     middleware: (getDefaultMiddleware) => {

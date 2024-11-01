@@ -132,9 +132,11 @@ const Cart: FC = () => {
 
                             <span>Вернуться назад</span>
                         </Link>
-                        <div className="button pay-btn">
-                            <span>Оплатить сейчас</span>
-                        </div>
+                        <Link to="/oplata">
+                            <div className="button pay-btn">
+                                <span>Оплатить сейчас</span>
+                            </div>
+                        </Link>
                     </div>
                 </div>
             </div>
