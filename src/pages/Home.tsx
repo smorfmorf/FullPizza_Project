@@ -1,9 +1,12 @@
-import React, { FC } from 'react';
-import Categories from '../components/Categories';
+import React, { FC, Suspense } from 'react';
+
 import Sort from '../components/Sort';
+import Pagination from '../components/Pagination';
+
+import Categories from '../components/Categories';
 import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
-import Pagination from '../components/Pagination';
+
 import qs from 'qs';
 
 import { list } from '../components/Sort';
@@ -18,10 +21,13 @@ import {
 } from '../redux/slices/filterSlice';
 import { SearchPizzaParams, fetchPizzas, selectPizzaData } from '../redux/slices/pizzasSlice';
 
+const MyComp = React.lazy(() => import('../utils/math'));
+
 const Home: React.FC = () => {
     //? useCallback возвращает функцию и говорим когда пересоздавать ее (при первом рендер и больше не пересоздавай функцию).
     const onChangeCategory = React.useCallback((id: number) => {
         dispatch(setCategoryId(id));
+        console.log(id);
     }, []);
 
     const navigate = useNavigate();
@@ -36,6 +42,7 @@ const Home: React.FC = () => {
     const { categoryId, sortType, currentPage, searchValue } = useSelector(selectFilter);
     const { items, status } = useSelector(selectPizzaData);
 
+    //* получение page из дочернего Компонента
     function onChangePage(page: number) {
         dispatch(setCurrentPage(page));
     }
@@ -55,8 +62,8 @@ const Home: React.FC = () => {
             }),
         );
     };
-    //! ПОЛУЧАНИЕ ИЗ URL параметров - эти 3 useEffect
 
+    //! ПОЛУЧАНИЕ ИЗ URL параметров - эти 3 useEffect
     // Если изменили параметры и был 1 рендер
     React.useEffect(() => {
         // на 2 перерисовку будем делать преобразование параметров в одну целую строку
@@ -66,7 +73,6 @@ const Home: React.FC = () => {
                 category: categoryId,
                 currentPage: currentPage,
             }); //'queryString: ' sortProperty=rating&category=0&currentPage=1
-
             navigate(`?${queryString}`);
         }
         //сохраняем информацию о том что был первый рендер
@@ -78,12 +84,10 @@ const Home: React.FC = () => {
         //если в URL есть параметры то мы парсим в объект
         if (window.location.search) {
             //убераем знак ? из URL, SearchPizzaParams - тип для BackEnd, чтобы мы передавали только строчки.
-            const params = qs.parse(window.location.search.substring(1)) as SearchPizzaParams;
-            console.log('params: ', params);
+            const params = qs.parse(window.location.search.substring(1)) as SearchPizzaParams; // { sortProperty: 'rating', category: '1', currentPage: '1' }
             const sort = list.find((obj) => obj.sortProperty === params.sortBy);
 
             //эта функция setFilters ожидает получить тип FilterSliceState
-            console.log(params);
             dispatch(
                 setFilters({
                     searchValue: params.search,
@@ -111,25 +115,19 @@ const Home: React.FC = () => {
         }
 
         isSearch.current = false;
-        console.log('useEffect2', isSearch.current);
+        console.log('useEffect2_isSearch', isSearch.current);
     }, [categoryId, sortType, searchValue, currentPage]);
 
     const skeletons = [...new Array(6)].map((_, index) => <Skeleton key={index} />);
-
-    //является ли items массивом если да тогда map
-    const pizzas = Array.isArray(items)
-        ? items.map((obj) => <PizzaBlock key={obj.id} {...obj} />)
-        : '';
+    const pizzas = items.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
 
     return (
         <div className="container">
             <div className="content__top">
-                <Categories
-                    value={categoryId}
-                    onChangeCategory={(index: number) => onChangeCategory(index)}
-                />
+                <Categories value={categoryId} onChangeCategory={onChangeCategory} />
                 <Sort sortType={sortType} />
             </div>
+
             <h2 className="content__title">Все пиццы</h2>
             {status === 'error' ? (
                 <div className="content__error-info">
@@ -146,5 +144,3 @@ const Home: React.FC = () => {
 };
 
 export default Home;
-
-//

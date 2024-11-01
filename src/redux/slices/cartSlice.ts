@@ -17,25 +17,23 @@ interface CartSliceState {
     items: CartItem[];
 }
 
-//так типизируется весь state
-//(тк если не указать тип TS-берет его из значений и будет ошибка тк items - never[])
-
 const { totalPrice, items } = getCartFromLS();
 
+//так типизируется весь state
+//(тк если не указать тип TS-берет его из значений и будет ошибка тк items:[] - never[])
 const initialState: CartSliceState = {
-    totalPrice,
-    items,
+    totalPrice, //totalPrice: 0
+    items, //items: []
 };
 
-//логика обработки нашего state.
 //createSlice взял тип из initialState и автоматически типизирует наши функции.
 const cartSlice = createSlice({
     name: 'cart',
     initialState: initialState,
 
-    //методы которые будут менять наш state
+    //методы которые будут менять(обрабатывать) наш state
     reducers: {
-        //тип PayloadAction и что хотим получить в payload
+        //тип PayloadAction и что хотим получить в action.payload указываем в <>
         addItem(state, action: PayloadAction<CartItem>) {
             const findItem = state.items.find((obj) => obj.id === action.payload.id);
             if (findItem) {
@@ -51,7 +49,7 @@ const cartSlice = createSlice({
                 return obj.price * obj.count + sum;
             }, 0);
         },
-        // В Redux из action.payload ожидаем строчку тк obj.id = string, чтобы Компоненты знали, что ничто другое нельзя передавать.
+        // В Redux из action.payload ожидаем строчку тк obj.id = string,           чтобы Компоненты знали, что ничто другое нельзя передавать.
         minusItem(state, action: PayloadAction<string>) {
             const findItem = state.items.find((obj) => obj.id === action.payload);
             if (findItem) {
@@ -76,13 +74,13 @@ const cartSlice = createSlice({
         },
     },
 });
-
-//useSelector Иначае типизируем - это весь state со всеми reducerами(глобальный state)
+//*Типизация Selectora, Типизируем весь state(со всеми reducerами) и из него достаем, тот state который нам нужен
 export const selectCart = (state: RootState) => state.cart;
 
 export const selectCartItemById = (id: string) => (state: RootState) =>
     state.cart.items.find((obj) => obj.id === id);
 
+//экспорт всех функций(экшены) из slice
 export const { addItem, minusItem, removeItem, clearItems } = cartSlice.actions;
-
+// логика обработки всего нашего state, для store.
 export default cartSlice.reducer;

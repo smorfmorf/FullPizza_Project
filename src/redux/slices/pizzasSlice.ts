@@ -80,8 +80,6 @@ const pizzasSlice = createSlice({
             state.items = action.payload;
         });
         builder.addCase(fetchPizzas.rejected, (state, action) => {
-            console.log('action: ', action);
-
             console.log('Была ошибка: ', state);
             state.status = Status.ERROR;
             state.items = [];
@@ -92,8 +90,5 @@ const pizzasSlice = createSlice({
 //* Типизация selector
 export const selectPizzaData = (state: RootState) => state.pizza;
 
-//экспорт всех функций(экшены) из slice
 export const { setItems } = pizzasSlice.actions;
-
-// логика обработки всего нашего state, для store.
 export default pizzasSlice.reducer;

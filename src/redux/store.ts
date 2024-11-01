@@ -1,30 +1,32 @@
 import { configureStore } from '@reduxjs/toolkit';
+import { useDispatch } from 'react-redux';
+
 import cart from './slices/cartSlice';
 import filter from './slices/filterSlice';
 import pizza from './slices/pizzasSlice';
-import { useDispatch } from 'react-redux';
+import { goodsApi } from './slices/goodsApi';
 
 //* Создаем хранилище, каждый slice это его часть.
 export const store = configureStore({
     // это редьюсер - обработка slice
     reducer: {
+        //динамическое имя goodsApi: и за счет createApi создается ключ редьюсер и он в себе будет хранить все необходимые endpoints
+        [goodsApi.reducerPath]: goodsApi.reducer,
+
         //slice - состояние и логика (методы из reducers)
         cart: cart,
         filter,
         pizza,
     },
+    // мидлваре - логика которая выполняется в момент запуска экшена до их выполнения
+    middleware: (getDefaultMiddleware) => {
+        // вызов даст массив и в него добавь еще мидлваре из goodsApi который RTK Query сам создаст
+        return getDefaultMiddleware().concat(goodsApi.middleware);
+    },
 });
 
-console.log(store);
-
-//! 1 - получаем тип всего хранилища!!!, он его автоматически сам получает
-//глобальный state - в котором тип 3 slice.
+//! 1 - получаем тип всего хранилища (всех 3х cлайсов)
 export type RootState = ReturnType<typeof store.getState>;
-
 //! 2 - создаем специальный хук useAppDispatch (разрешаем передавать в dispatch - асинхроный экшн) тк поумолчанию TS думает что он может принимать только объекты.
-//тип для dispatch - делаем более продвинутый хук useDispatch
 type AppDispatch = typeof store.dispatch; //берем все action из slice и превращаем в тип для TS
-//теперь у нас есть специальный хук, мы взяли анонимую F которая вызывает useDispatch но внутрь его передаст специальный тип со всеми моими экшенами
 export const useAppDispatch = () => useDispatch<AppDispatch>();
-// или так
-// export const useAppDispatch = useDispatch.withTypes<AppDispatch>;

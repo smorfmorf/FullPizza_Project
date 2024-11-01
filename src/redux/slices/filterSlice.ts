@@ -43,9 +43,8 @@ const filterSlice = createSlice({
         // тк state.categhoryId - ожидает number из payload (значит тип number)
         setCategoryId(state, action: PayloadAction<number>) {
             state.categoryId = action.payload;
-            console.log(action);
         },
-        // в Redux когда будет вызываться функция setSort нельзя передавать какой-то не понятный объект, а только тот который соотвествует Sort
+        // в Redux когда будет вызываться функция setSort нельзя передавать какой-то   не понятный объект, а только тот который соотвествует Sort
         setSort(state, action: PayloadAction<Sort>) {
             state.sortType = action.payload;
         },
@@ -56,7 +55,6 @@ const filterSlice = createSlice({
             state.searchValue = action.payload;
         },
         // setFilters - Фильтр ожидает получить все свойства, которые есть в нашем state
-        // Когда хотим обновить все фильтры, которые есть. (в <Home/> есть логика которая парсит URL параметры и передает их все в slice) //  В payload разрешаем передавать весь state (все его свойства)
         setFilters(state, action: PayloadAction<FilterSliceState>) {
             state.sortType = action.payload.sortType;
             state.currentPage = Number(action.payload.currentPage);
@@ -70,5 +68,4 @@ export const selectSort = (state: RootState) => state.filter.sortType;
 
 export const { setCategoryId, setSort, setCurrentPage, setFilters, setSearchValue } =
     filterSlice.actions;
-
 export default filterSlice.reducer;

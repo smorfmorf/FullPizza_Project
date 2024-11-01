@@ -1,4 +1,5 @@
 import ReactPaginate from 'react-paginate';
+
 import { FC } from 'react';
 
 import styles from './Pagination.module.scss';
@@ -25,7 +26,5 @@ const Pagination: FC<PaginationProps> = ({ onChangePage, currentPage }) => {
         />
     );
 };
-
-export default Pagination;
-
 // если у них в библиотеке 0 это 1 страница, то у нас в redux 1 это 1 страница
+export default Pagination;

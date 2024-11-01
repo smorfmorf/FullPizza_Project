@@ -6,8 +6,6 @@ import { selectCart } from '../redux/slices/cartSlice';
 import React from 'react';
 
 function Header() {
-    const isMounted = React.useRef(false);
-
     const location = useLocation();
 
     const { totalPrice, items } = useSelector(selectCart);
@@ -16,7 +14,8 @@ function Header() {
         return item.count + sum;
     }, 0);
 
-    //* Сохраняем в localString данные из Redux
+    const isMounted = React.useRef(false);
+    //* Сохраняем в localString данные из Redux, при 1 рендере не сохраняем.
     React.useEffect(() => {
         if (isMounted) {
             const json = JSON.stringify(items);
@@ -34,8 +33,8 @@ function Header() {
                         <img width="38" src={logoSvg} alt="Pizza logo" />
 
                         <div>
-                            <h1>React Pizza</h1>
-                            <p>самая вкусная пицца во вселенной</p>
+                            <h1>Pizza</h1>
+                            <p>самая вкусная пицца</p>
                         </div>
                     </div>
                 </Link>

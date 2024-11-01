@@ -1,5 +1,10 @@
 import { useDispatch } from 'react-redux';
-import { CartItem, addItem, minusItem, removeItem } from '../redux/slices/cartSlice';
+import {
+    CartItem as CartItemType,
+    addItem,
+    minusItem,
+    removeItem,
+} from '../redux/slices/cartSlice';
 import { FC } from 'react';
 
 type CartItemProps = {
@@ -12,13 +17,13 @@ type CartItemProps = {
     imageUrl: string;
 };
 
-const CartItemBlock: FC<CartItemProps> = ({ id, title, type, size, count, price, imageUrl }) => {
+const CartItem: FC<CartItemProps> = ({ id, title, type, size, count, price, imageUrl }) => {
     const dispatch = useDispatch();
 
     const onClickPlus = () => {
         //Говорим: что Этот объекm является таким же как и тип CartItem
         //(я говорю не ругайся, этот объект является как CartItem)
-        dispatch(addItem({ id } as CartItem));
+        dispatch(addItem({ id } as CartItemType));
     };
 
     const onClickMinus = () => {
@@ -109,6 +114,6 @@ const CartItemBlock: FC<CartItemProps> = ({ id, title, type, size, count, price,
         </div>
     );
 };
-export default CartItemBlock;
+export default CartItem;
 
 //

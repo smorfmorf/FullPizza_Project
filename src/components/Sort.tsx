@@ -1,11 +1,13 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Sort, SortProperyEnum, selectSort, setSort } from '../redux/slices/filterSlice';
+import { useDispatch } from 'react-redux';
+import { Sort as SortType, SortProperyEnum, setSort } from '../redux/slices/filterSlice';
 
 type SortItem = {
     name: string;
     sortProperty: SortProperyEnum;
 };
+
+// Делаем согласованость чтобы были в списке Компонента Sort одинаковые значение сортировки и в Redux.
 export const list: SortItem[] = [
     { name: 'популярности (DESC)', sortProperty: SortProperyEnum.RATING_DESC },
     { name: 'популярности  (ASC)', sortProperty: SortProperyEnum.RATING_ASC },
@@ -16,14 +18,12 @@ export const list: SortItem[] = [
 ];
 
 type SortPopupProps = {
-    sortType: Sort;
+    sortType: SortType;
 };
 
-const SortPopup: React.FC<SortPopupProps> = React.memo(({ sortType }) => {
+const Sort: React.FC<SortPopupProps> = React.memo(({ sortType }) => {
     const [open, setOpen] = React.useState(false);
-
     const sortRef = React.useRef<HTMLDivElement>(null);
-
     const dispatch = useDispatch();
 
     const onClickListItem = (obj: SortItem) => {
@@ -83,4 +83,4 @@ const SortPopup: React.FC<SortPopupProps> = React.memo(({ sortType }) => {
     );
 });
 
-export default SortPopup;
+export default Sort;

@@ -3,8 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CartItem, addItem, selectCartItemById } from '../../redux/slices/cartSlice';
 import { Link } from 'react-router-dom';
 
-const typeNames = ['тонкое', 'традиционное'];
-
 type PizzaBlockProps = {
     id: string;
     title: string;
@@ -14,17 +12,17 @@ type PizzaBlockProps = {
     types: number[];
 };
 
+const typeNames = ['тонкое', 'традиционное'];
+
 const PizzaBlock: FC<PizzaBlockProps> = ({ id, title, price, imageUrl, sizes, types }) => {
     const [activeType, setActiveType] = React.useState(0);
     const [activeSize, setActiveSize] = React.useState(0);
 
-    // поиск конкретной пиццы, которую будем добавлять в корзину
+    // поиск добавленной пиццы, из корзины
     const cartItem = useSelector(selectCartItemById(id));
-
     const count = cartItem ? cartItem.count : 0;
 
     const dispatch = useDispatch();
-
     const onClickAdd = () => {
         const item: CartItem = {
             id,
